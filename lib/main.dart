@@ -249,7 +249,7 @@ class MainPageState extends State<MainPage> {
                     margin: const EdgeInsets.only(
                       top: 8.0,
                     ),
-                    child: const Text('Jarak Bayangan:')),
+                    child: const Text('Tinggi Bayangan:')),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 8.0,
