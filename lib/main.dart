@@ -80,7 +80,9 @@ class MainPageState extends State<MainPage> {
             onChanged: (double newHeight) {
               setState(() {
                 heightValue = newHeight;
-                heightController.text = newHeight.toString();
+                heightController.text = (newHeight -
+                        (MediaQuery.of(context).size.height / 2.5 - 20.0))
+                    .toString();
               });
             },
             min: 20.0,
@@ -164,7 +166,7 @@ class MainPageState extends State<MainPage> {
                         () {
                           if (20.0 <= double.parse(newValue) &&
                               double.parse(newValue) <=
-                                  (MediaQuery.of(context).size.width / 1.25 -
+                                  (MediaQuery.of(context).size.width / 1.5 -
                                       20.0)) {
                             distanceValue = double.parse(newValue);
                             distanceIsInRange = true;
@@ -235,7 +237,12 @@ class MainPageState extends State<MainPage> {
                     enabled: false,
                     controller: shadowDistanceController,
                     decoration: InputDecoration(
-                      hintText: shadowDistance.toString(),
+                      hintText: focusValue == 0.0
+                          ? null
+                          : (shadowDistance -
+                                  ((MediaQuery.of(context).size.width / 3 -
+                                      20.0)))
+                              .toString(),
                       border: const OutlineInputBorder(),
                     ),
                   ),
@@ -259,7 +266,12 @@ class MainPageState extends State<MainPage> {
                     enabled: false,
                     controller: shadowHeightController,
                     decoration: InputDecoration(
-                      hintText: shadowHeight.toString(),
+                      hintText: focusValue == 0.0
+                          ? null
+                          : (shadowHeight -
+                                  (MediaQuery.of(context).size.height / 2.5 -
+                                      20.0))
+                              .toString(),
                       border: const OutlineInputBorder(),
                     ),
                   ),
@@ -280,7 +292,9 @@ class MainPageState extends State<MainPage> {
           onChanged: (double newDistance) {
             setState(() {
               distanceValue = newDistance;
-              distanceController.text = newDistance.toString();
+              distanceController.text =
+                  (newDistance - (MediaQuery.of(context).size.width / 3 - 20.0))
+                      .toString();
             });
           },
           min: 20.0,
@@ -300,7 +314,9 @@ class MainPageState extends State<MainPage> {
             onChanged: (double newFocus) {
               setState(() {
                 focusValue = newFocus;
-                focusController.text = newFocus.toString();
+                focusController.text =
+                    (newFocus - ((MediaQuery.of(context).size.width / 1.5) / 4))
+                        .toString();
               });
             },
             min: 0.0,
@@ -332,6 +348,26 @@ class MainPageState extends State<MainPage> {
               shadowHeight: shadowHeight,
             ),
           ),
+          Transform.translate(
+            offset:
+                Offset(-focusValue, MediaQuery.of(context).size.height / 60),
+            child: const SizedBox(
+                width: 10,
+                height: 20,
+                child: Text("f",
+                    style:
+                        TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+          ),
+          Transform.translate(
+            offset: Offset(
+                -shadowDistance, MediaQuery.of(context).size.height / 60),
+            child: const SizedBox(
+                width: 10,
+                height: 20,
+                child: Text("r",
+                    style:
+                        TextStyle(fontSize: 10, fontWeight: FontWeight.bold))),
+          )
         ],
       ),
     );
