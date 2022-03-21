@@ -16,6 +16,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Concave Lens Simulation App',
       theme: ThemeData(
         primarySwatch: Colors.pink,
@@ -39,7 +40,7 @@ class MainPageState extends State<MainPage> {
   TextEditingController shadowDistanceController = TextEditingController();
   TextEditingController shadowHeightController = TextEditingController();
   // tinggi objek sementara
-  double heightValue = 20.0;
+  double heightValue = 80.0;
   // tinggi objek sementara
   double distanceValue = 20.0;
   // jarak titik fokus
@@ -65,41 +66,8 @@ class MainPageState extends State<MainPage> {
     // tinggi bayangan
     double shadowHeight = shadowDistance * heightValue / distanceValue;
 
-    // slider tinggi objek
-    var verticalSlider = Padding(
-      padding: const EdgeInsets.only(
-        top: 8.0,
-        left: 16.0,
-      ),
-      child: RotatedBox(
-        quarterTurns: 1,
-        child: SizedBox(
-          width: MediaQuery.of(context).size.height / 1.25,
-          child: Slider(
-            value: heightValue,
-            onChanged: (double newHeight) {
-              setState(() {
-                heightValue = newHeight;
-                heightController.text = (newHeight -
-                        (MediaQuery.of(context).size.height / 2.5 - 20.0))
-                    .toString();
-              });
-            },
-            min: 20.0,
-            max: MediaQuery.of(context).size.height / 1.25 - 20.0,
-          ),
-        ),
-      ),
-    );
-
-    var textController = Padding(
-      padding: const EdgeInsets.only(top: 8.0, right: 24.0),
-      child: Container(
-        width: 300,
-        height: 400,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.black),
-        ),
+    var inputController = Padding(
+        padding: const EdgeInsets.only(left: 24.0, right: 24.0),
         child: Column(
           children: [
             // height controller
@@ -111,6 +79,7 @@ class MainPageState extends State<MainPage> {
                       top: 8.0,
                     ),
                     child: const Text('Ukuran Benda:')),
+                const SizedBox(width: 8.0),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 8.0,
@@ -141,6 +110,9 @@ class MainPageState extends State<MainPage> {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 8.0,
+            ),
             // distance controller
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -150,6 +122,7 @@ class MainPageState extends State<MainPage> {
                       top: 8.0,
                     ),
                     child: const Text('Jarak Benda:')),
+                const SizedBox(width: 16.0),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 8.0,
@@ -180,6 +153,9 @@ class MainPageState extends State<MainPage> {
                 ),
               ],
             ),
+            const SizedBox(
+              height: 8.0,
+            ),
             // focus controller
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -188,7 +164,8 @@ class MainPageState extends State<MainPage> {
                     margin: const EdgeInsets.only(
                       top: 8.0,
                     ),
-                    child: const Text('Titik Fokus Cermin:')),
+                    child: const Text('Titik Fokus:')),
+                const SizedBox(width: 24.0),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 8.0,
@@ -219,7 +196,13 @@ class MainPageState extends State<MainPage> {
                 ),
               ],
             ),
-            // shadow distance controller
+          ],
+        ));
+
+    var outputController = Padding(
+        padding: const EdgeInsets.only(right: 24.0),
+        child: Column(
+          children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -228,6 +211,7 @@ class MainPageState extends State<MainPage> {
                       top: 8.0,
                     ),
                     child: const Text('Jarak Bayangan:')),
+                const SizedBox(width: 8.0),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 8.0,
@@ -257,6 +241,7 @@ class MainPageState extends State<MainPage> {
                       top: 8.0,
                     ),
                     child: const Text('Tinggi Bayangan:')),
+                const SizedBox(width: 8.0),
                 Container(
                   margin: const EdgeInsets.only(
                     top: 8.0,
@@ -279,60 +264,78 @@ class MainPageState extends State<MainPage> {
               ],
             ),
           ],
-        ),
-      ),
+        ));
+
+    // slider tinggi objek
+    var heightSlider = Slider(
+      value: heightValue,
+      onChanged: (double newHeight) {
+        setState(() {
+          heightValue = newHeight;
+          heightController.text =
+              (newHeight - (MediaQuery.of(context).size.height / 2.5 - 80.0))
+                  .toString();
+        });
+      },
+      min: 80.0,
+      max: MediaQuery.of(context).size.height / 1.25 - 80.0,
     );
 
     // Slider jarak benda ke cermin
-    var distanceSlider = Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Center(
-        child: Slider(
-          value: distanceValue,
-          onChanged: (double newDistance) {
-            setState(() {
-              distanceValue = newDistance;
-              distanceController.text =
-                  (newDistance - (MediaQuery.of(context).size.width / 3 - 20.0))
-                      .toString();
-            });
-          },
-          min: 20.0,
-          max: MediaQuery.of(context).size.width / 1.5 - 20.0,
-        ),
-      ),
+    var distanceSlider = Slider(
+      value: distanceValue,
+      onChanged: (double newDistance) {
+        setState(() {
+          distanceValue = newDistance;
+          distanceController.text =
+              (newDistance - (MediaQuery.of(context).size.width / 3 - 20.0))
+                  .toString();
+        });
+      },
+      min: 20.0,
+      max: MediaQuery.of(context).size.width / 1.5 - 20.0,
     );
 
     // Slider titik fokus
-    var focusSlider = Padding(
-      padding: const EdgeInsets.only(top: 8.0),
-      child: Center(
-        child: SizedBox(
-          width: 600,
-          child: Slider(
-            value: focusValue,
-            onChanged: (double newFocus) {
-              setState(() {
-                focusValue = newFocus;
-                focusController.text =
-                    (newFocus - ((MediaQuery.of(context).size.width / 1.5) / 4))
-                        .toString();
-              });
-            },
-            min: 0.0,
-            max: (MediaQuery.of(context).size.width / 1.5) / 2,
-          ),
-        ),
-      ),
+    var focusSlider = Slider(
+      value: focusValue,
+      onChanged: (double newFocus) {
+        setState(() {
+          focusValue = newFocus;
+          focusController.text =
+              (newFocus - ((MediaQuery.of(context).size.width / 1.5) / 4))
+                  .toString();
+        });
+      },
+      min: 0.0,
+      max: (MediaQuery.of(context).size.width / 1.5) / 2,
     );
 
+    var sliderContainer = Expanded(
+        child: Container(
+      margin: const EdgeInsets.only(left: 24.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Slider Ukuran Benda:'),
+          heightSlider,
+          const Text('Slider Jarak Benda:'),
+          distanceSlider,
+          const Text('Slider Titik Fokus:'),
+          focusSlider,
+        ],
+      ),
+    ));
+
     // canvas buat garis
-    var canvas = Container(
-      margin: const EdgeInsets.only(top: 8.0, right: 24.0, left: 24.0),
-      width: MediaQuery.of(context).size.width / 1.5,
+    var canvas = Expanded(
+        child: Container(
+      margin: const EdgeInsets.only(top: 16.0, right: 24.0, left: 24.0),
+      // width: MediaQuery.of(context).size.width / 1.5,
       height: MediaQuery.of(context).size.height / 1.25,
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black),
+        color: Colors.white,
       ),
       child: Stack(
         alignment: AlignmentDirectional.center,
@@ -370,28 +373,45 @@ class MainPageState extends State<MainPage> {
           )
         ],
       ),
-    );
+    ));
 
     return Scaffold(
+      backgroundColor: Colors.grey[100],
       body: Column(
         children: [
-          Column(
-            children: [
-              focusSlider,
-              distanceSlider,
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              verticalSlider,
-              canvas,
-              textController,
-            ],
+          canvas,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 32.0),
+            child: Row(
+              children: [
+                sliderContainer,
+                inputController,
+                outputController,
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 }
+
+// body: Column(
+      //   children: [
+      //     Column(
+      //       children: [
+      //         focusSlider,
+      //         distanceSlider,
+      //       ],
+      //     ),
+      //     Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       children: [
+      //         heightSlider,
+      //         canvas,
+      //         textController,
+      //       ],
+      //     ),
+      //   ],
+      // ),
