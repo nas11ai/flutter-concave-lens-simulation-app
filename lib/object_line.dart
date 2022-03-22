@@ -52,7 +52,7 @@ class ObjectLinePainter extends CustomPainter {
     var shadowY = (size.height / 2) + shadowHeight;
     var objectPaint = Paint()
       ..color = Colors.blue
-      ..strokeWidth = 1
+      ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
 
     var distancePaint = Paint()
@@ -77,7 +77,7 @@ class ObjectLinePainter extends CustomPainter {
 
     var shadowObjectPaint = Paint()
       ..color = Colors.amber
-      ..strokeWidth = 1
+      ..strokeWidth = 3
       ..strokeCap = StrokeCap.round;
 
     // object line
@@ -109,6 +109,9 @@ class ObjectLinePainter extends CustomPainter {
 
     // draw distance
     canvas.drawLine(distanceStartingPoint, distanceEndingPoint, distancePaint);
+
+    // canvas.drawLine(Offset(distanceValue, heightValue),
+    //     Offset(-size.width / 2, -shadowY), focusPaint);
 
     if (heightValue < size.height / 2) {
       // draw focus
