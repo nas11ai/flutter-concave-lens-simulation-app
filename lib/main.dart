@@ -39,6 +39,7 @@ class MainPageState extends State<MainPage> {
   TextEditingController focusController = TextEditingController();
   TextEditingController shadowDistanceController = TextEditingController();
   TextEditingController shadowHeightController = TextEditingController();
+
   // tinggi objek sementara
   double heightValue = 80.0;
   // tinggi objek sementara
@@ -94,11 +95,14 @@ class MainPageState extends State<MainPage> {
                     onChanged: (newValue) {
                       setState(
                         () {
-                          if (20.0 <= double.parse(newValue) &&
+                          if ((-MediaQuery.of(context).size.height / 2.5) +
+                                      80.0 <=
+                                  double.parse(newValue) &&
                               double.parse(newValue) <=
-                                  (MediaQuery.of(context).size.height / 1.25 -
-                                      20.0)) {
-                            heightValue = double.parse(newValue);
+                                  (MediaQuery.of(context).size.height / 2.5) -
+                                      80.0) {
+                            heightValue = -double.parse(newValue) +
+                                (MediaQuery.of(context).size.height / 2.5);
                             heightIsInRange = true;
                           } else {
                             heightIsInRange = false;
@@ -137,11 +141,13 @@ class MainPageState extends State<MainPage> {
                     onChanged: (newValue) {
                       setState(
                         () {
-                          if (20.0 <= double.parse(newValue) &&
+                          if ((-MediaQuery.of(context).size.width / 3) + 20.0 <=
+                                  double.parse(newValue) &&
                               double.parse(newValue) <=
-                                  (MediaQuery.of(context).size.width / 1.5 -
+                                  ((MediaQuery.of(context).size.width / 3) -
                                       20.0)) {
-                            distanceValue = double.parse(newValue);
+                            distanceValue = -double.parse(newValue) +
+                                (MediaQuery.of(context).size.width / 3);
                             distanceIsInRange = true;
                           } else {
                             distanceIsInRange = false;
@@ -221,12 +227,10 @@ class MainPageState extends State<MainPage> {
                     enabled: false,
                     controller: shadowDistanceController,
                     decoration: InputDecoration(
-                      hintText: focusValue == 0.0
+                      hintText: shadowDistance == 0.0
                           ? null
-                          : (shadowDistance -
-                                  ((MediaQuery.of(context).size.width / 3 -
-                                      20.0)))
-                              .toString(),
+                          : shadowDistance.toString(),
+                      hintStyle: const TextStyle(color: Colors.black),
                       border: const OutlineInputBorder(),
                     ),
                   ),
@@ -251,12 +255,10 @@ class MainPageState extends State<MainPage> {
                     enabled: false,
                     controller: shadowHeightController,
                     decoration: InputDecoration(
-                      hintText: focusValue == 0.0
+                      hintText: shadowHeight.abs() == 0.0
                           ? null
-                          : (shadowHeight -
-                                  (MediaQuery.of(context).size.height / 2.5 -
-                                      20.0))
-                              .toString(),
+                          : (-shadowHeight).toString(),
+                      hintStyle: const TextStyle(color: Colors.black),
                       border: const OutlineInputBorder(),
                     ),
                   ),
@@ -272,8 +274,11 @@ class MainPageState extends State<MainPage> {
       onChanged: (double newHeight) {
         setState(() {
           heightValue = newHeight;
-          heightController.text =
-              (newHeight - (MediaQuery.of(context).size.height / 2.5 - 80.0))
+          heightController.text = newHeight <
+                  (MediaQuery.of(context).size.height / 2.5)
+              ? ((newHeight - (MediaQuery.of(context).size.height / 2.5)).abs())
+                  .toString()
+              : (-(newHeight - (MediaQuery.of(context).size.height / 2.5)))
                   .toString();
         });
       },
@@ -287,8 +292,11 @@ class MainPageState extends State<MainPage> {
       onChanged: (double newDistance) {
         setState(() {
           distanceValue = newDistance;
-          distanceController.text =
-              (newDistance - (MediaQuery.of(context).size.width / 3 - 20.0))
+          distanceController.text = newDistance <
+                  (MediaQuery.of(context).size.width / 3)
+              ? ((newDistance - (MediaQuery.of(context).size.width / 3)).abs())
+                  .toString()
+              : (-(newDistance - (MediaQuery.of(context).size.width / 3)))
                   .toString();
         });
       },
@@ -302,9 +310,7 @@ class MainPageState extends State<MainPage> {
       onChanged: (double newFocus) {
         setState(() {
           focusValue = newFocus;
-          focusController.text =
-              (newFocus - ((MediaQuery.of(context).size.width / 1.5) / 4))
-                  .toString();
+          focusController.text = newFocus.toString();
         });
       },
       min: 0.0,
@@ -395,23 +401,3 @@ class MainPageState extends State<MainPage> {
     );
   }
 }
-
-// body: Column(
-      //   children: [
-      //     Column(
-      //       children: [
-      //         focusSlider,
-      //         distanceSlider,
-      //       ],
-      //     ),
-      //     Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       children: [
-      //         heightSlider,
-      //         canvas,
-      //         textController,
-      //       ],
-      //     ),
-      //   ],
-      // ),
