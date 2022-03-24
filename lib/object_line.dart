@@ -5,6 +5,7 @@ class ObjectLine extends StatefulWidget {
   final double distanceValue;
   final double shadowDistance;
   final double shadowHeight;
+  final double focusValue;
 
   const ObjectLine({
     Key? key,
@@ -12,6 +13,7 @@ class ObjectLine extends StatefulWidget {
     required this.distanceValue,
     required this.shadowDistance,
     required this.shadowHeight,
+    required this.focusValue,
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class _ObjectLineState extends State<ObjectLine> {
         widget.distanceValue,
         widget.shadowDistance,
         widget.shadowHeight,
+        widget.focusValue,
       ),
       child: Container(),
     );
@@ -38,12 +41,14 @@ class ObjectLinePainter extends CustomPainter {
   final double distanceValue;
   final double shadowDistance;
   final double shadowHeight;
+  final double focusValue;
 
   ObjectLinePainter(
     this.heightValue,
     this.distanceValue,
     this.shadowDistance,
     this.shadowHeight,
+    this.focusValue,
   );
 
   @override
@@ -51,9 +56,9 @@ class ObjectLinePainter extends CustomPainter {
     var shadowX = (size.width / 2) - shadowDistance;
     var shadowY = (size.height / 2) + shadowHeight;
     var objectPaint = Paint()
-      ..color = Colors.blue
-      ..strokeWidth = 3
-      ..strokeCap = StrokeCap.round;
+      ..color = Colors.yellow
+      ..strokeWidth = 30
+      ..strokeCap = StrokeCap.butt;
 
     var distancePaint = Paint()
       ..color = Colors.orange.shade900
@@ -76,11 +81,32 @@ class ObjectLinePainter extends CustomPainter {
       ..strokeCap = StrokeCap.round;
 
     var shadowObjectPaint = Paint()
-      ..color = Colors.amber
-      ..strokeWidth = 3
+      ..color = Colors.yellow[100]!
+      ..strokeWidth = 30
+      ..strokeCap = StrokeCap.butt;
+
+    var firePaint = Paint()
+      ..color = Colors.pink
+      ..strokeWidth = 1
       ..strokeCap = StrokeCap.round;
 
-    // object line
+    var shadowFirePaint = Paint()
+      ..color = Colors.pink[100]!
+      ..strokeWidth = 1
+      ..strokeCap = StrokeCap.round;
+
+    // var objWidth = 20;
+    var objHeight = 40;
+
+    // canvas.drawLine(Offset(distanceValue - objWidth, heightValue + objHeight),
+    //     Offset(distanceValue - objWidth, size.height / 2), objectPaint);
+
+    // canvas.drawLine(Offset(distanceValue + objWidth, heightValue + objHeight),
+    //     Offset(distanceValue + objWidth, size.height / 2), objectPaint);
+
+    // canvas.drawLine(Offset(distanceValue - objWidth, heightValue + objHeight),
+    //     Offset(distanceValue + objWidth, heightValue + objHeight), objectPaint);
+
     Offset objectStartingPoint = Offset(distanceValue, heightValue);
     Offset objectEndingPoint = Offset(distanceValue, size.height / 2);
 
@@ -104,16 +130,14 @@ class ObjectLinePainter extends CustomPainter {
     Offset shadowObjectStartingPoint = Offset(shadowX, size.height / 2);
     Offset shadowObjectEndingPoint = Offset(shadowX, shadowY);
 
-    // draw object
-    canvas.drawLine(objectStartingPoint, objectEndingPoint, objectPaint);
-
-    // draw distance
-    canvas.drawLine(distanceStartingPoint, distanceEndingPoint, distancePaint);
-
     // canvas.drawLine(Offset(distanceValue, heightValue),
     //     Offset(-size.width / 2, -shadowY), focusPaint);
 
-    if (heightValue < size.height / 2) {
+    if (heightValue < (size.height / 2) - objHeight) {
+      // draw distance
+      canvas.drawLine(
+          distanceStartingPoint, distanceEndingPoint, distancePaint);
+
       // draw focus
       canvas.drawLine(focusStartingPoint, focusEndingPoint, focusPaint);
 
@@ -125,10 +149,33 @@ class ObjectLinePainter extends CustomPainter {
       canvas.drawLine(shadowDistanceStartingPoint, shadowDistanceEndingPoint,
           shadowDistancePaint);
 
+      // draw object
+      canvas.drawLine(objectStartingPoint, objectEndingPoint, objectPaint);
+
+      canvas.drawOval(
+          Offset(distanceValue - 15, heightValue - objHeight) &
+              const Size(30.0, 40.0),
+          firePaint);
+
       // draw shadow object
       canvas.drawLine(shadowObjectStartingPoint, shadowObjectEndingPoint,
           shadowObjectPaint);
-    } else {
+
+      if (focusValue > 0) {
+        if (shadowDistance > 0) {
+          canvas.drawOval(
+              Offset(shadowX - 15, shadowY) & const Size(30.0, 40.0),
+              shadowFirePaint);
+        } else {
+          canvas.drawOval(
+              Offset(shadowX - 15, shadowY - objHeight) &
+                  const Size(30.0, 40.0),
+              shadowFirePaint);
+        }
+      }
+    } else if (heightValue > (size.height / 2) + objHeight) {
+      // draw object
+      canvas.drawLine(objectStartingPoint, objectEndingPoint, objectPaint);
       focusEndingPoint = Offset(size.width / 2, size.height - shadowY);
 
       shadowFocusEndingPoint = Offset(shadowX, size.height - shadowY);
@@ -139,8 +186,27 @@ class ObjectLinePainter extends CustomPainter {
           Offset(size.width / 2, size.height - shadowY);
 
       // shadow object line
+      Offset shadowObjectStartingPoint = Offset(shadowX, size.height / 2);
+      Offset shadowObjectEndingPoint = Offset(shadowX, shadowY + objHeight);
+
+      // shadow object line
       shadowObjectStartingPoint = Offset(shadowX, size.height / 2);
       shadowObjectEndingPoint = Offset(shadowX, size.height - shadowY);
+
+      canvas.drawOval(
+          Offset(distanceValue - 15, heightValue) & const Size(30.0, 40.0),
+          firePaint);
+
+      if (focusValue > 0) {
+        canvas.drawOval(
+            Offset(shadowX - 15, size.height - shadowY - objHeight) &
+                const Size(30.0, 40.0),
+            shadowFirePaint);
+      }
+
+      // draw distance
+      canvas.drawLine(
+          distanceStartingPoint, distanceEndingPoint, distancePaint);
 
       // draw focus
       canvas.drawLine(focusStartingPoint, focusEndingPoint, focusPaint);
@@ -148,6 +214,7 @@ class ObjectLinePainter extends CustomPainter {
       //draw shadow focus
       canvas.drawLine(
           shadowFocusStartingPoint, shadowFocusEndingPoint, shadowFocusPaint);
+
       // draw shadow distance
       canvas.drawLine(shadowDistanceStartingPoint, shadowDistanceEndingPoint,
           shadowDistancePaint);

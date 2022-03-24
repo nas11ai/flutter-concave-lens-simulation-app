@@ -355,6 +355,7 @@ class MainPageState extends State<MainPage> {
               distanceValue: distanceValue,
               shadowDistance: shadowDistance,
               shadowHeight: shadowHeight,
+              focusValue: focusValue,
             ),
           ),
           Transform.translate(
